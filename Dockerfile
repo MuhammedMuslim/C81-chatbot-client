@@ -8,7 +8,7 @@ RUN npm ci
 COPY public ./public
 COPY src ./src
 
-ARG REACT_APP_API_BASE_URL=
+ARG REACT_APP_API_BASE_URL=http://chatbot-client.frontend:8080
 ENV REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL
 
 RUN npm run build
