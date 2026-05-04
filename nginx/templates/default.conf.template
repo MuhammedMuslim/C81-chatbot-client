@@ -4,8 +4,10 @@ server {
     root /usr/share/nginx/html;
     index index.html;
 
+    # ${BACKEND_HOST} / ${BACKEND_PORT} substituted at container start (nginx Docker entrypoint).
+    # Docker Compose: backend:8080 | Kubernetes cross-namespace: chatbot-server.backend.svc.cluster.local:8080
     location /api/ {
-        proxy_pass http://chatbot-server.backend.svc.cluster.local:8080;
+        proxy_pass http://${BACKEND_HOST}:${BACKEND_PORT};
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
