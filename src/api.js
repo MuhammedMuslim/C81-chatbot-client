@@ -30,9 +30,10 @@ export async function startFromChat(payload) {
   if (!r.ok) {
     throw new Error(parseErrorBody(data, r.statusText))
   }
+  // Backend returns string so Zeebe processInstanceKey is not rounded by IEEE-754 in JSON.
   const id = data.conversationId
   if (id == null) throw new Error('Missing conversationId in response')
-  return { processInstanceKey: String(id) }
+  return { processInstanceKey: String(id).trim() }
 }
 
 export async function pollSession(processInstanceKey) {

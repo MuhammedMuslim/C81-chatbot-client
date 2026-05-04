@@ -43,12 +43,32 @@ function App() {
           if (s.phase === 'awaiting_user' && s.assistantMessage != null) {
             setPhase('awaiting_user');
             setMessages((prev) => {
+              const incoming = s.assistantMessage;
               const last = prev[prev.length - 1];
-              if (last && last.role === 'assistant' && last.content === s.assistantMessage) {
+              if (last && last.role === 'assistant' && last.content === incoming) {
                 return prev;
               }
-              return [...prev, { role: 'assistant', content: s.assistantMessage }];
+              // After a user reply (e.g. attachment-only), last is user — stale polls can repeat the same bot text.
+              let lastUserIdx = -1;
+              for (let i = prev.length - 1; i >= 0; i--) {
+                if (prev[i].role === 'user') {
+                  lastUserIdx = i;
+                  break;
+                }
+              }
+              if (lastUserIdx > 0) {
+                const beforeLastUser = prev[lastUserIdx - 1];
+                if (
+                  beforeLastUser &&
+                  beforeLastUser.role === 'assistant' &&
+                  beforeLastUser.content === incoming
+                ) {
+                  return prev;
+                }
+              }
+              return [...prev, { role: 'assistant', content: incoming }];
             });
+            stopPolling();
           } else if (s.phase === 'agent_running') {
             setPhase('agent_running');
           }
@@ -56,7 +76,7 @@ function App() {
           setError(String(e.message || e));
           stopPolling();
         }
-      }, 1200);
+      }, 3000);
     },
     [stopPolling]
   );
@@ -98,6 +118,7 @@ function App() {
       } else {
         setPhase('agent_running');
         await api.sendUserMessage(processInstanceKey, text, attachments);
+        startPolling(processInstanceKey);
       }
     } catch (err) {
       setError(String(err.message || err));
