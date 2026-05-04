@@ -1,17 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #13141f;
-  --text-primary: #e2e8f0;
-  --text-secondary: #94a3b8;
-  --accent-color: #6366f1;
-  --accent-hover: #4f46e5;
-  --accent-glow: rgba(99, 102, 241, 0.4);
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --accent-color: #0057B8;
+  --accent-hover: #004593;
+  --accent-glow: rgba(0, 87, 184, 0.4);
+  --accent-secondary: #00A9CE;
+  --accent-warning: #FF8F1C;
   --error-color: #ef4444;
   --success-color: #10b981;
-  --glass-bg: rgba(19, 20, 31, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.8);
 }
 
 body {
@@ -24,8 +26,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-image: 
-    radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 40%);
+    radial-gradient(circle at 15% 50%, rgba(0, 87, 184, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 85% 30%, rgba(0, 169, 206, 0.08) 0%, transparent 45%);
   background-attachment: fixed;
   min-height: 100vh;
 }
@@ -45,10 +47,10 @@ code {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.25);
 }

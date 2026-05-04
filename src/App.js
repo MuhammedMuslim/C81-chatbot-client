@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
+import logo from './ku-logo.png';
 import * as api from './api';
 import { assertFileSizesOk, filesToAttachmentParts } from './fileAttachments';
 
@@ -118,11 +119,8 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Excuse absence — Camunda chat</h1>
-        <p className="sub">
-          Your first message (and optional files) starts <code>Process_xadodio_chat</code>. Files are sent as{' '}
-          <code>currentChat.attachments</code> for the agent.
-        </p>
+        <img src={logo} alt="Khalifa University Logo" className="navbar-logo" />
+        <h1>Khalifa University — Absence Request</h1>
       </header>
 
       {configOk === false && (
@@ -135,33 +133,21 @@ function App() {
       <main className="layout layout-single">
         <section className="chat-panel">
           <div className="panel-header">
-            <label className="inline-label">
-              Student email (optional)
-              <input
-                value={studentEmail}
-                onChange={(e) => setStudentEmail(e.target.value)}
-                type="email"
-                placeholder="student@school.edu"
-                autoComplete="email"
-                disabled={!!processInstanceKey}
-              />
-            </label>
+
             {processInstanceKey ? (
               <p className="meta">
                 Conversation / process instance: <code>{processInstanceKey}</code>
               </p>
             ) : null}
 
-            {phase === 'agent_running' && processInstanceKey ? (
-              <div className="banner info">Agent or connectors are running…</div>
-            ) : null}
+
           </div>
 
           <div className="messages" aria-live="polite">
             {messages.length === 0 ? (
               <p className="empty">
-                Type your absence request and/or attach documents, then press Send. That starts the Camunda process;
-                the agent reply appears here when the Chat Bot task is reached.
+                Welcome to the Khalifa University Absence Request Portal.<br/><br/>
+                Please provide the details of your absence and attach any supporting documentation (such as medical certificates). Once submitted, your request will be reviewed and you will receive a response shortly.
               </p>
             ) : (
               messages.map((msg, i) => (
@@ -176,6 +162,16 @@ function App() {
                   <div className="msg-bubble">{msg.content}</div>
                 </div>
               ))
+            )}
+            {(busy || phase === 'agent_running') && (
+              <div className="msg msg-assistant">
+                <span className="msg-label">
+                  <><svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> Agent</>
+                </span>
+                <div className="msg-bubble typing-indicator">
+                  <span></span><span></span><span></span>
+                </div>
+              </div>
             )}
           </div>
 
