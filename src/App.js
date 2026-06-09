@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
-import logo from './ku-logo.png';
+import logo from './code81-logo.svg';
 import * as api from './api';
 import { assertFileSizesOk, filesToAttachmentParts } from './fileAttachments';
 
@@ -140,8 +140,8 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <img src={logo} alt="Khalifa University Logo" className="navbar-logo" />
-        <h1>Khalifa University — Absence Request</h1>
+        <img src={logo} alt="Code81 Logo" className="navbar-logo" />
+        <h1>Absent Chatbot</h1>
       </header>
 
       {configOk === false && (
@@ -167,7 +167,7 @@ function App() {
           <div className="messages" aria-live="polite">
             {messages.length === 0 ? (
               <p className="empty">
-                Welcome to the Khalifa University Absence Request Portal.<br/><br/>
+                Welcome to the Code81 Absence Request Portal.<br/><br/>
                 Please provide the details of your absence and attach any supporting documentation (such as medical certificates). Once submitted, your request will be reviewed and you will receive a response shortly.
               </p>
             ) : (

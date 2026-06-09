@@ -3,15 +3,15 @@
 :root {
   --bg-primary: #f8fafc;
   --bg-secondary: #ffffff;
-  --text-primary: #0f172a;
+  --text-primary: #0D1720;
   --text-secondary: #64748b;
-  --accent-color: #0057B8;
-  --accent-hover: #004593;
-  --accent-glow: rgba(0, 87, 184, 0.4);
-  --accent-secondary: #00A9CE;
+  --accent-color: #5B9279;
+  --accent-hover: #4a7a66;
+  --accent-glow: rgba(91, 146, 121, 0.4);
+  --accent-secondary: #497563;
   --accent-warning: #FF8F1C;
   --error-color: #ef4444;
-  --success-color: #10b981;
+  --success-color: #5B9279;
   --glass-bg: rgba(255, 255, 255, 0.85);
   --glass-border: rgba(255, 255, 255, 0.8);
 }
@@ -26,8 +26,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-image: 
-    radial-gradient(circle at 15% 50%, rgba(0, 87, 184, 0.08) 0%, transparent 45%),
-    radial-gradient(circle at 85% 30%, rgba(0, 169, 206, 0.08) 0%, transparent 45%);
+    radial-gradient(circle at 15% 50%, rgba(91, 146, 121, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 85% 30%, rgba(73, 117, 99, 0.08) 0%, transparent 45%);
   background-attachment: fixed;
   min-height: 100vh;
 }
