@@ -40,7 +40,7 @@ function App() {
       pollRef.current = setInterval(async () => {
         try {
           const s = await api.pollSession(key);
-          if (s.phase === 'awaiting_user' && s.assistantMessage != null) {
+          if (s.phase === 'awaiting_user' && s.assistantMessage) {
             setPhase('awaiting_user');
             setMessages((prev) => {
               const incoming = s.assistantMessage;
