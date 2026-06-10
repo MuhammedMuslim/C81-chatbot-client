@@ -16,6 +16,10 @@ function App() {
   const [busy, setBusy] = useState(false);
   const [phase, setPhase] = useState('idle');
   const pollRef = useRef(null);
+  // Engine job key of the last assistant message we displayed. Backend search data is
+  // eventually consistent, so right after a reply a poll can briefly return the PREVIOUS
+  // turn again — we must skip it and keep polling until a NEW messageId arrives.
+  const lastMessageIdRef = useRef(null);
 
   const stopPolling = useCallback(() => {
     if (pollRef.current) {
@@ -40,34 +44,20 @@ function App() {
       pollRef.current = setInterval(async () => {
         try {
           const s = await api.pollSession(key);
+          if (s.phase === 'ended') {
+            setPhase('ended');
+            stopPolling();
+            return;
+          }
           if (s.phase === 'awaiting_user' && s.assistantMessage) {
+            // Stale poll: this is the turn we already displayed (the engine's search index
+            // lags for a few seconds after a reply). Keep polling for the new turn.
+            if (s.messageId && s.messageId === lastMessageIdRef.current) {
+              return;
+            }
+            lastMessageIdRef.current = s.messageId || null;
             setPhase('awaiting_user');
-            setMessages((prev) => {
-              const incoming = s.assistantMessage;
-              const last = prev[prev.length - 1];
-              if (last && last.role === 'assistant' && last.content === incoming) {
-                return prev;
-              }
-              // After a user reply (e.g. attachment-only), last is user — stale polls can repeat the same bot text.
-              let lastUserIdx = -1;
-              for (let i = prev.length - 1; i >= 0; i--) {
-                if (prev[i].role === 'user') {
-                  lastUserIdx = i;
-                  break;
-                }
-              }
-              if (lastUserIdx > 0) {
-                const beforeLastUser = prev[lastUserIdx - 1];
-                if (
-                  beforeLastUser &&
-                  beforeLastUser.role === 'assistant' &&
-                  beforeLastUser.content === incoming
-                ) {
-                  return prev;
-                }
-              }
-              return [...prev, { role: 'assistant', content: incoming }];
-            });
+            setMessages((prev) => [...prev, { role: 'assistant', content: s.assistantMessage }]);
             stopPolling();
           } else if (s.phase === 'agent_running') {
             setPhase('agent_running');
@@ -122,6 +112,13 @@ function App() {
       }
     } catch (err) {
       setError(String(err.message || err));
+      // Sending failed (e.g. transient backend/engine issue): let the user retry
+      // instead of leaving the composer locked in agent_running forever.
+      if (processInstanceKey) {
+        setPhase('awaiting_user');
+      } else {
+        setPhase('idle');
+      }
     } finally {
       setBusy(false);
     }
@@ -183,6 +180,11 @@ function App() {
                   <div className="msg-bubble">{msg.content}</div>
                 </div>
               ))
+            )}
+            {phase === 'ended' && (
+              <p className="empty">
+                This conversation has ended. Refresh the page to start a new absence request.
+              </p>
             )}
             {(busy || phase === 'agent_running') && (
               <div className="msg msg-assistant">

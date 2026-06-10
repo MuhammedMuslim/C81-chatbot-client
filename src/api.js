@@ -41,14 +41,23 @@ export async function pollSession(processInstanceKey) {
   const data = await r.json().catch(() => ({}))
   if (!r.ok) throw new Error(parseErrorBody(data, r.statusText))
 
-  const { status, message } = data
+  const { status, message, messageId } = data
   if (status === 'pending_user_reply') {
-    return { phase: 'awaiting_user', assistantMessage: message != null ? String(message) : '' }
+    return {
+      phase: 'awaiting_user',
+      assistantMessage: message != null ? String(message) : '',
+      // Engine job key of this assistant turn: lets the UI ignore stale polls without
+      // comparing message text (identical texts on different turns are still shown).
+      messageId: messageId != null ? String(messageId) : null,
+    }
+  }
+  if (status === 'ended') {
+    return { phase: 'ended', assistantMessage: null, messageId: null }
   }
   if (status === 'waiting' || status === 'processing') {
-    return { phase: 'agent_running', assistantMessage: message != null ? String(message) : null }
+    return { phase: 'agent_running', assistantMessage: message != null ? String(message) : null, messageId: null }
   }
-  return { phase: 'agent_running', assistantMessage: null }
+  return { phase: 'agent_running', assistantMessage: null, messageId: null }
 }
 
 /**
