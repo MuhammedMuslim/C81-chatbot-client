@@ -138,7 +138,7 @@ function App() {
     <div className="app">
       <header className="app-header">
         <img src={logo} alt="Code81 Logo" className="navbar-logo" />
-        <h1>Absent Chatbot</h1>
+        <h1>Absent Request Manager</h1>
       </header>
 
       {configOk === false && (
